@@ -73,7 +73,7 @@ class Runner
     {
         $build_url = 'https://circleci.com/api/v1.1/project/github/'
                      . $project
-                     . '/tree/master/?circle-token='
+                     . '/tree/master?circle-token='
                      . $this->config->circleToken();
         $response = $this->http->request(
             'POST',
