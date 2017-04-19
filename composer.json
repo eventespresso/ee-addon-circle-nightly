@@ -1,0 +1,22 @@
+{
+    "name": "eventespresso/ee-addon-circle-nightly",
+    "description": "PHP cli script for triggering nightly builds of Event Espresso add-on tests on circle-ci.com",
+    "require": {
+        "guzzlehttp/guzzle": "^6.2",
+        "php": ">=5.5",
+        "monolog/monolog": "^1.22",
+        "knplabs/github-api": "^2.2",
+        "php-http/guzzle6-adapter": "^1.1",
+        "cache/redis-adapter": "^0.4.2"
+    },
+    "license": "MIT",
+    "autoload": {
+      "psr-4" : {"EventEspresso\\CLI\\Tools\\" : "src/"}
+    },
+    "authors": [
+        {
+            "name": "Darren Ethier",
+            "email": "darren@roughsmootheng.in"
+        }
+    ]
+}
