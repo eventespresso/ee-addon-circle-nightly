@@ -5,9 +5,17 @@ namespace EventEspresso\CLI\Tools;
 use GuzzleHttp\Client;
 use Monolog\Logger;
 use Github\Client as GithubClient;
-use EventEspresso\CLI\Tools\Config;
 use UnexpectedValueException;
 
+/**
+ * Runner
+ * This takes care of triggering builds.
+ *
+ * @package EventEspresso\CLI\Tools
+ * @subpackage
+ * @author  Darren Ethier
+ * @since   1.0.0
+ */
 class Runner
 {
     /**
@@ -34,7 +42,7 @@ class Runner
 
 
     /**
-     * @var Config;
+     * @var \EventEspresso\CLI\Tools\Config;
      */
     private $config;
 
@@ -43,8 +51,10 @@ class Runner
      * Runner constructor.
      *
      * @param \EventEspresso\CLI\Tools\Config $config
-     * @param \GuzzleHttp\Client              $client
+     * @param \GuzzleHttp\Client              $http_client
+     * @param \Github\Client                  $github_client
      * @param \Monolog\Logger                 $logger
+     * @internal param \GuzzleHttp\Client $client
      */
     public function __construct(Config $config, Client $http_client, GithubClient $github_client, Logger $logger)
     {
@@ -56,6 +66,9 @@ class Runner
     }
 
 
+    /**
+     * Client code calls this to trigger nightly builds for any projects setup for notification.
+     */
     public function triggerNightlies()
     {
         //we do a nightly for file path in the given build machine path that has an info.json file where github is true
@@ -67,7 +80,11 @@ class Runner
     }
 
 
-
+    /**
+     * Executes notification to circle for each registered project.
+     * @param string $project  Something like 'eventespresso/eea-people-addon'
+     * @param string $branch   Something like 'master' or '4.9.27.p'
+     */
     private function triggerNightly($project, $branch)
     {
         $build_url = 'https://circleci.com/api/v1.1/project/github/'

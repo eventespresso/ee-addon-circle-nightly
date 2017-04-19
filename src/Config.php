@@ -1,4 +1,5 @@
 <?php
+
 namespace EventEspresso\CLI\Tools;
 
 use InvalidArgumentException;
@@ -18,6 +19,7 @@ class Config
 
     /**
      * An array of project slugs that get notified.  This should correspond to the slug for the github project.
+     *
      * @var array
      */
     private $projects_to_notify = array();
@@ -25,6 +27,7 @@ class Config
 
     /**
      * The host for redis.
+     *
      * @var string
      */
     private $redis_host = '127.0.0.1';
@@ -32,6 +35,7 @@ class Config
 
     /**
      * The port for redis
+     *
      * @var int
      */
     private $redis_port = 6379;
@@ -39,6 +43,7 @@ class Config
 
     /**
      * The password for the redis connection
+     *
      * @var string
      */
     private $redis_password = '';
@@ -46,6 +51,7 @@ class Config
 
     /**
      * This is the auth token used to authenticate with github.
+     *
      * @var string
      */
     private $github_token = '';
@@ -53,6 +59,7 @@ class Config
 
     /**
      * The github user/organization
+     *
      * @var string
      */
     private $github_user = '';
@@ -60,6 +67,7 @@ class Config
 
     /**
      * This is the main project that the add-ons are tested against (usually the "core" plugin that add-ons are for)
+     *
      * @var string
      */
     private $github_main_project = '';
@@ -67,19 +75,26 @@ class Config
 
     /**
      * Authentication token for circle
+     *
      * @var string
      */
     private $circle_token = '';
 
 
-
+    /**
+     * Config constructor.
+     *
+     * @param $options_file
+     */
     public function __construct($options_file)
     {
         $this->setUp($options_file);
     }
 
 
-
+    /**
+     * @param $options_file
+     */
     private function setUp($options_file)
     {
         //if the file isn't readable then get out.
@@ -100,54 +115,72 @@ class Config
     }
 
 
-
+    /**
+     * @return array
+     */
     public function projectsToNotify()
     {
         return $this->projects_to_notify;
     }
 
 
-
+    /**
+     * @return string
+     */
     public function redisHost()
     {
         return $this->redis_host;
     }
 
 
-
+    /**
+     * @return int
+     */
     public function redisPort()
     {
         return $this->redis_port;
     }
 
 
-
+    /**
+     * @return string
+     */
     public function redisPassword()
     {
         return $this->redis_password;
     }
 
 
+    /**
+     * @return string
+     */
     public function githubAuthToken()
     {
         return $this->github_token;
     }
 
 
-
+    /**
+     * @return string
+     */
     public function githubUser()
     {
         return $this->github_user;
     }
 
 
+    /**
+     * @return string
+     */
     public function githubMainProject()
     {
         return $this->github_main_project;
     }
 
 
-
+    /**
+     * @return string
+     */
     public function circleToken()
     {
         return $this->circle_token;
