@@ -19,6 +19,9 @@ Since our core plugin receives much more activity than our add-ons, its importan
 
 ### 1. Clone to a directory on the server you want to use for triggering builds.
 ### 2. Make sure redis and phpredis is installed on the server.
+Calls to github are cached when there are no changes. This just prevents any potential rate-limiting from kicking in.
+With a lot of add-ons getting triggered this could be a big deal so caching helps. 
+
 ### 3. Use composer to install
 
 ```bash
