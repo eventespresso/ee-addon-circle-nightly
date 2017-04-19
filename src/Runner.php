@@ -52,7 +52,6 @@ class Runner
         $this->http                = $http_client;
         $this->logger              = $logger;
         $this->github              = $github_client;
-        //authenticate
         $this->latest_release_core = $this->getLatestTagFromCore();
     }
 
