@@ -1,12 +1,12 @@
 <?php
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use EventEspresso\CLI\Tools\Runner;
-use EventEspresso\CLI\Tools\Config;
-use GuzzleHttp\Client;
-use Github\Client as GithubClient;
-use Cache\Adapter\Redis\RedisCachePool;
+use \Monolog\Logger;
+use \Monolog\Handler\StreamHandler;
+use \EventEspresso\CLI\Tools\Runner;
+use \EventEspresso\CLI\Tools\Config;
+use \GuzzleHttp\Client;
+use \Github\Client as GithubClient;
+use \Cache\Adapter\Redis\RedisCachePool;
 
 
 $logger = new Logger('addon_nightly');

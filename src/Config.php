@@ -87,13 +87,16 @@ class Config
             throw new InvalidArgumentException(sprintf('Unable to read the given file %s.', $options_file));
         }
 
-        $decoded = json_decode(file_get_contents($options_file));
+        $decoded = json_decode(file_get_contents($options_file, true));
         if ($decoded === null) {
             throw new LogicException(sprintf('The contents of the file (%s) is not valid json.', $options_file));
         }
 
-        //let's setup properties from the json object.
-        //@todo
+        foreach ($decoded as $key => $value) {
+            if (property_exists($this, $key) && ! empty($value)) {
+                $this->$key = $value;
+            }
+        }
     }
 
 
