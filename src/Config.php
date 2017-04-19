@@ -150,6 +150,6 @@ class Config
 
     public function circleToken()
     {
-        return $this->circleToken();
+        return $this->circle_token;
     }
 }
