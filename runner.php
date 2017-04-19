@@ -1,18 +1,18 @@
 <?php
 
-use \Monolog\Logger;
-use \Monolog\Handler\StreamHandler;
-use \EventEspresso\CLI\Tools\Runner;
-use \EventEspresso\CLI\Tools\Config;
-use \GuzzleHttp\Client;
-use \Github\Client as GithubClient;
-use \Cache\Adapter\Redis\RedisCachePool;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use EventEspresso\CLI\Tools\Runner;
+use EventEspresso\CLI\Tools\Config;
+use GuzzleHttp\Client;
+use Github\Client as GithubClient;
+use Cache\Adapter\Redis\RedisCachePool;
 
+require 'vendor/autoload.php';
 
 $logger = new Logger('addon_nightly');
 $logger->pushHandler(new StreamHandler('/var/log/nightlies/addon_nightly.log', Logger::WARNING));
 
-require 'vendor/autoload.php';
 if (! file_exists('src.json')) {
     $logger->error('Missing src.json.  This contains necessary file paths and configuration for the nightly builder to use.');
 }
