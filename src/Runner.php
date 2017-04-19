@@ -78,7 +78,11 @@ class Runner
             'POST',
             $build_url,
             array(
-                'json' => array('RELEASE_BUILD' => $branch)
+                'json' => array(
+                    'build_parameters' => array(
+                        'RELEASE_BUILD' => $branch
+                    )
+                )
             )
         );
         if ($response->getStatusCode() !== 200) {
