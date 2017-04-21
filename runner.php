@@ -10,16 +10,19 @@ use Cache\Adapter\Redis\RedisCachePool;
 
 require 'vendor/autoload.php';
 
+$path = dirname(__FILE__) . '/';
+
 $logger = new Logger('addon_nightly');
 $logger->pushHandler(new StreamHandler('/var/log/nightlies/addon_nightly.log', Logger::WARNING));
 
-if (! file_exists('src.json')) {
+if (! file_exists($path . 'src.json')) {
     $logger->error('Missing src.json.  This contains necessary file paths and configuration for the nightly builder to use.');
+    exit;
 }
 
 try{
     //grab our config from json.
-    $config = new Config('src.json');
+    $config = new Config($path . 'src.json');
 
     //setup redis caching.
     $redis = new Redis();
