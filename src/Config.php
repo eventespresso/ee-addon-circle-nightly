@@ -18,11 +18,18 @@ class Config
 {
 
     /**
-     * An array of project slugs that get notified.  This should correspond to the slug for the github project.
+     * An array of project slugs that get notified on circle.  This should correspond to the slug for the github project.
      *
      * @var array
      */
     private $projects_to_notify = array();
+
+
+    /**
+     * An array of project slugs that get notified on travis.  This should correspond to the slug for the github project.
+     * @var array
+     */
+    private $projects_to_notify_travis = array();
 
 
     /**
@@ -82,6 +89,13 @@ class Config
 
 
     /**
+     * Authentication token for travis
+     * @var string
+     */
+    private $travis_token = '';
+
+
+    /**
      * Config constructor.
      *
      * @param $options_file
@@ -121,6 +135,15 @@ class Config
     public function projectsToNotify()
     {
         return $this->projects_to_notify;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function projectsToNotifyTravis()
+    {
+        return $this->projects_to_notify_travis;
     }
 
 
@@ -184,5 +207,14 @@ class Config
     public function circleToken()
     {
         return $this->circle_token;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function travisToken()
+    {
+        return $this->travis_token;
     }
 }

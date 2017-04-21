@@ -71,11 +71,21 @@ class Runner
      */
     public function triggerNightlies()
     {
-        //we do a nightly for file path in the given build machine path that has an info.json file where github is true
-        //and nightly is true.
-        foreach ($this->config->projectsToNotify() as $project) {
-            $this->triggerNightly($project, 'master');
-            $this->triggerNightly($project, $this->latest_release_core);
+        //nightlies for circle
+        if ($this->config->projectsToNotify()) {
+            //we do a nightly for file path in the given build machine path that has an info.json file where github is true
+            //and nightly is true.
+            foreach ($this->config->projectsToNotify() as $project) {
+                $this->triggerNightlyCircle($project, 'master');
+                $this->triggerNightlyCircle($project, $this->latest_release_core);
+            }
+        }
+
+        //nightlies for travis
+        if ($this->config->projectsToNotifyTravis()) {
+            foreach ($this->config->projectsToNotifyTravis() as $travis_project) {
+                $this->triggerNightlyTravis($project);
+            }
         }
     }
 
@@ -85,7 +95,7 @@ class Runner
      * @param string $project  Something like 'eventespresso/eea-people-addon'
      * @param string $branch   Something like 'master' or '4.9.27.p'
      */
-    private function triggerNightly($project, $branch)
+    private function triggerNightlyCircle($project, $branch)
     {
         $build_url = 'https://circleci.com/api/v1.1/project/github/'
                      . $project
@@ -102,9 +112,38 @@ class Runner
                 )
             )
         );
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== "200" || $response->getStatusCode() !== "201") {
             $this->logger->warning($response->getBody());
             return;
+        }
+    }
+
+
+    /**
+     * Executes notification to travis given project
+     * @param string $project  Something like 'eventespresso/eea-people-addon'
+     */
+    private function triggerNightlyTravis($project)
+    {
+        $build_url = 'https://api.travis-ci.org/repo/' . urlencode($project) . '/requests';
+        $response = $this->http->request(
+            'POST',
+            $build_url,
+            array(
+                'headers' => array(
+                    'Travis-API-Version:' => 3,
+                    'Authorization' => 'token ' . $this->config->travisToken()
+                ),
+                'json' => array(
+                    'request' => array(
+                        'branch' => 'master',
+                        'message' => 'Nightly Build',
+                    )
+                )
+            )
+        );
+        if ($response->getStatusCode() !== "200" || $response->getStatusCode() !== "201") {
+            $this->logger->warning($response->getBody());
         }
     }
 

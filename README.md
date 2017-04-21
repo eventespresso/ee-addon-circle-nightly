@@ -37,17 +37,22 @@ You need at a minimum the following in the json file:
   "projects_to_notify" : [
     "eventespresso/eea-people-addon"
   ],
+  "projects_to_notify_travis" : [
+    "eventespresso/eea-people-addon"
+  ],
   "redis_password" : "password_for_redis",
   "github_token" : "personal_github_api_token",
   "github_user" : "organization_username_for_core_plugin",
   "github_main_project" : "slug-for-core-plugin-repository",
-  "circle_token" : "api-token-for-circle"
+  "circle_token" : "api-token-for-circle",
+  "travis_token" : "api-token-for-travis"
 }
 ```
 
 | item | description |
 |----- |--------------|
-projects_to_notify | an array of github `repository_user/repository_slug` references for add-ons.
+projects_to_notify | an array of github `repository_user/repository_slug` references for add-ons.  Tests are triggered on circleci.com
+projects_to_notify_travis | an array of github `repository_user/repository_slug` references for add-ons. Tests are triggered on travis-ci.org
 redis_password | If your redis install is authed, add the redis password here. If there is no auth leave blank.
 github_token | Add your github api token if your core plugin is a private repository.
 github_user | This should be the organization/user part where the main plugin resides on github.
