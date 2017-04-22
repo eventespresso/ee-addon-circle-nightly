@@ -84,7 +84,8 @@ class Runner
         //nightlies for travis
         if ($this->config->projectsToNotifyTravis()) {
             foreach ($this->config->projectsToNotifyTravis() as $travis_project) {
-                $this->triggerNightlyTravis($project);
+                $this->triggerNightlyTravis($travis_project, 'master');
+                $this->triggerNightlyTravis($travis_project, $this->latest_release_core);
             }
         }
     }
@@ -121,9 +122,11 @@ class Runner
 
     /**
      * Executes notification to travis given project
-     * @param string $project  Something like 'eventespresso/eea-people-addon'
+     *
+     * @param string $project Something like 'eventespresso/eea-people-addon'
+     * @param string $branch
      */
-    private function triggerNightlyTravis($project)
+    private function triggerNightlyTravis($project, $branch)
     {
         $build_url = 'https://api.travis-ci.org/repo/' . urlencode($project) . '/requests';
         $response = $this->http->request(
@@ -138,6 +141,13 @@ class Runner
                     'request' => array(
                         'branch' => 'master',
                         'message' => 'Nightly Build',
+                        'config' => array(
+                            'env' => array(
+                                'global' => array(
+                                    "EE_VERSION=$branch"
+                                )
+                            )
+                        )
                     )
                 )
             )
