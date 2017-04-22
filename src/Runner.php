@@ -140,7 +140,7 @@ class Runner
                 'json' => array(
                     'request' => array(
                         'branch' => 'master',
-                        'message' => 'Nightly Build for EE core ' . $branch,
+                        'message' => 'Nightly Build against EE core ' . $branch,
                         'config' => array(
                             'merge_mode' => 'deep_merge',
                             'env' => array(
