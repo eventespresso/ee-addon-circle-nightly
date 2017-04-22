@@ -58,6 +58,7 @@ github_token | Add your github api token if your core plugin is a private reposi
 github_user | This should be the organization/user part where the main plugin resides on github.
 github_main_project | This should be the slug for the main plugin on github.
 circle_token | The api token for circle.
+travis_token | The api token for travis.
 
 ### 5. Test directly
 
