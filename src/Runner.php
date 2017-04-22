@@ -134,14 +134,15 @@ class Runner
             $build_url,
             array(
                 'headers' => array(
-                    'Travis-API-Version:' => 3,
+                    'Travis-API-Version' => 3,
                     'Authorization' => 'token ' . $this->config->travisToken()
                 ),
                 'json' => array(
                     'request' => array(
                         'branch' => 'master',
-                        'message' => 'Nightly Build',
+                        'message' => 'Nightly Build for EE core ' . $branch,
                         'config' => array(
+                            'merge_mode' => 'deep_merge',
                             'env' => array(
                                 'global' => array(
                                     "EE_VERSION=$branch"
