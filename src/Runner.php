@@ -136,8 +136,9 @@ class Runner
                 'headers' => array(
                     'Travis-API-Version' => 3,
                     'Authorization' => 'token ' . $this->config->travisToken(),
-                    'User-Agent' => 'EventEspressoNightlies/1.0.0',
-                    'Accept' => 'application/vnd.travis-ci.2+json'
+                    'User-Agent' => 'Travis EventEspressoNightlies/1.0.0',
+                    'Accept' => 'application/vnd.travis-ci.2+json',
+                    'Content-Type' => 'application/json'
                 ),
                 'json' => array(
                     'request' => array(
