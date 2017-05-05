@@ -68,9 +68,11 @@ class Runner
 
     /**
      * Client code calls this to trigger nightly builds for any projects setup for notification.
+     * Every 3 loops (6 pings to travis) we sleep for 2 seconds so that we're not hitting any rate limits.
      */
     public function triggerNightlies()
     {
+        $count = 0;
         //nightlies for circle
         if ($this->config->projectsToNotify()) {
             //we do a nightly for file path in the given build machine path that has an info.json file where github is true
@@ -78,14 +80,25 @@ class Runner
             foreach ($this->config->projectsToNotify() as $project) {
                 $this->triggerNightlyCircle($project, 'master');
                 $this->triggerNightlyCircle($project, $this->latest_release_core);
+                $count ++;
+                if ($count%3 === 0) {
+                    $count = 0;
+                    sleep(3);
+                }
             }
         }
 
+        $count = 0;
         //nightlies for travis
         if ($this->config->projectsToNotifyTravis()) {
             foreach ($this->config->projectsToNotifyTravis() as $travis_project) {
                 $this->triggerNightlyTravis($travis_project, 'master');
                 $this->triggerNightlyTravis($travis_project, $this->latest_release_core);
+                $count ++;
+                if ($count%3 === 0) {
+                    $count = 0;
+                    sleep(3);
+                }
             }
         }
     }
