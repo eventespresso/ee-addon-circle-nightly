@@ -96,6 +96,29 @@ class Config
 
 
     /**
+     * Array of projects that acceptance tests are run on.
+     *  - each project should be for an ee-addon that receives nightly tests.
+     *  - the script will automatically trigger a build just for ee core.
+     *  - the script will automatically run acceptance tests for the add-ons against ee core master
+     *    and ee core latest release.
+     * The format for the array should be:
+     * array(
+     *  'project-slug',
+     * )
+     * @var array
+     */
+    private $acceptance_tests_projects = array();
+
+
+
+    /**
+     * The repository address for the acceptance test framework.
+     * @var string
+     */
+    private $acceptance_tests_repository = '';
+
+
+    /**
      * Config constructor.
      *
      * @param $options_file
@@ -216,5 +239,23 @@ class Config
     public function travisToken()
     {
         return $this->travis_token;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function acceptanceTestsProjects()
+    {
+        return $this->acceptance_tests_projects;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function acceptanceTestsRepository()
+    {
+        return $this->acceptance_tests_repository;
     }
 }

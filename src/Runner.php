@@ -80,7 +80,7 @@ class Runner
             foreach ($this->config->projectsToNotify() as $project) {
                 $this->triggerNightlyCircle($project, 'master');
                 $this->triggerNightlyCircle($project, $this->latest_release_core);
-                $count ++;
+                $count++;
                 if ($count%3 === 0) {
                     $count = 0;
                     sleep(3);
@@ -94,10 +94,28 @@ class Runner
             foreach ($this->config->projectsToNotifyTravis() as $travis_project) {
                 $this->triggerNightlyTravis($travis_project, 'master');
                 $this->triggerNightlyTravis($travis_project, $this->latest_release_core);
-                $count ++;
+                $count++;
                 if ($count%3 === 0) {
                     $count = 0;
                     sleep(3);
+                }
+            }
+        }
+
+        //nightly acceptance tests
+        if ($this->config->acceptanceTestsRepository()) {
+            //first trigger core only acceptance tests
+            $this->triggerNightlyAcceptanceTests('core', 'master');
+            $count = 0;
+            if ($this->config->acceptanceTestsProjects()) {
+                foreach ($this->config->acceptanceTestsProjects() as $acceptance_project) {
+                    $this->triggerNightlyAcceptanceTests($acceptance_project, 'master');
+                    $this->triggerNightlyAcceptanceTests($acceptance_project, $this->latest_release_core);
+                    $count++;
+                    if ($count%3 === 0) {
+                        $count = 0;
+                        sleep(3);
+                    }
                 }
             }
         }
@@ -169,7 +187,61 @@ class Runner
                 )
             )
         );
-        if ($response->getStatusCode() !== "200" || $response->getStatusCode() !== "201") {
+        if (in_array($response->getStatusCode(), $this->getTravisErrorStatusCodes())) {
+            $this->logger->warning($response->getBody());
+        }
+    }
+
+
+    /**
+     * Executes notification to travis to run acceptance tests.
+     * @param $project
+     * @param $branch
+     */
+    private function triggerNightlyAcceptanceTests($project, $branch)
+    {
+        $build_url = 'https://api.travis-ci.org/repo/' . urlencode($this->config->acceptanceTestsRepository()) . '/requests';
+        if ($branch === 'master') {
+            $global_environment_variables = array(
+                "EE_BRANCH=$branch"
+            );
+        } else {
+            $global_environment_variables = array(
+                "EE_TAG=$branch"
+            );
+        }
+
+        if ($project !== 'core') {
+            $global_environment_variables[] = "ADDON_PACKAGE=$project";
+        }
+        $response = $this->http->request(
+            'POST',
+            $build_url,
+            array(
+                'headers' => array(
+                    'Travis-API-Version' => 3,
+                    'Authorization' => 'token ' . $this->config->travisToken(),
+                    'User-Agent' => 'Travis EventEspressoNightlies/1.0.0',
+                    'Accept' => 'application/vnd.travis-ci.2+json',
+                    'Content-Type' => 'application/json'
+                ),
+                'json' => array(
+                    'request' => array(
+                        'branch' => 'master',
+                        'message' => $project === 'core'
+                            ? 'Nightly Acceptance Test build for Event Espresso Core.'
+                            : 'Nightly Acceptance Test build of ' . $project . ' against EE Core ' . $branch,
+                        'config' => array(
+                            'merge_mode' => 'deep_merge',
+                            'env' => array(
+                                'global' => $global_environment_variables
+                            )
+                        )
+                    )
+                )
+            )
+        );
+        if (in_array($response->getStatusCode(), $this->getTravisErrorStatusCodes())) {
             $this->logger->warning($response->getBody());
         }
     }
@@ -196,5 +268,21 @@ class Runner
         return $latest_tag['name'];
     }
 
+
+
+    private function getTravisErrorStatusCodes()
+    {
+        return [
+            409,
+            400,
+            403,
+            405,
+            404,
+            501,
+            429,
+            500,
+            422
+        ];
+    }
 }
 
