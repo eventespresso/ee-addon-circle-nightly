@@ -83,7 +83,7 @@ class Runner
                 $count++;
                 if ($count%3 === 0) {
                     $count = 0;
-                    sleep(3);
+                    sleep(10);
                 }
             }
         }
@@ -97,7 +97,7 @@ class Runner
                 $count++;
                 if ($count%3 === 0) {
                     $count = 0;
-                    sleep(3);
+                    sleep(10);
                 }
             }
         }
@@ -114,7 +114,7 @@ class Runner
                     $count++;
                     if ($count%3 === 0) {
                         $count = 0;
-                        sleep(3);
+                        sleep(10);
                     }
                 }
             }
