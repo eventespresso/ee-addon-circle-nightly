@@ -179,7 +179,8 @@ class Runner
                             'merge_mode' => 'deep_merge',
                             'env' => array(
                                 'global' => array(
-                                    "EE_VERSION=$branch"
+                                    "EE_VERSION=$branch",
+                                    "HAS_MAILCATCHER=1"
                                 )
                             )
                         )
