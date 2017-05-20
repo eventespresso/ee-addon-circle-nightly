@@ -179,8 +179,7 @@ class Runner
                             'merge_mode' => 'deep_merge',
                             'env' => array(
                                 'global' => array(
-                                    "EE_VERSION=$branch",
-                                    "HAS_MAILCATCHER=1"
+                                    "EE_VERSION=$branch"
                                 )
                             )
                         )
@@ -204,11 +203,13 @@ class Runner
         $build_url = 'https://api.travis-ci.org/repo/' . urlencode($this->config->acceptanceTestsRepository()) . '/requests';
         if ($branch === 'master') {
             $global_environment_variables = array(
-                "EE_BRANCH=$branch"
+                "EE_BRANCH=$branch",
+                "HAS_MAILCATCHER=1"
             );
         } else {
             $global_environment_variables = array(
-                "EE_TAG=$branch"
+                "EE_TAG=$branch",
+                "HAS_MAILCATCHER=1"
             );
         }
 
