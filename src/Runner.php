@@ -172,7 +172,7 @@ class Runner
         $build_url = 'https://api.travis-ci.org/repo/' . urlencode($project) . '/requests';
         $custom_message = 'Nightly Build against EE core ' . $branch;
         $config = array(
-            'merge_Mode' => 'deep_merge',
+            'merge_mode' => 'deep_merge',
             'env' => array(
                 'global' => array(
                     "EE_VERSION=$branch"
@@ -181,10 +181,10 @@ class Runner
         );
         $custom_travis_config = $this->config->customTravisConfigPhpunitTests();
         if (isset($custom_travis_config[$project])) {
-            $custom_message = isset($custom_travis_config['message'])
-                ? $custom_travis_config['message']
+            $custom_message = isset($custom_travis_config[$project]['message'])
+                ? $custom_travis_config[$project]['message']
                 : $custom_message;
-            $custom_travis_config = $this->unsetNonTravisKeysFromConfig($custom_travis_config);
+            $custom_travis_config = $this->unsetNonTravisKeysFromConfig($custom_travis_config[$project]);
             $config = array_merge($config, $custom_travis_config);
         }
         $response = $this->http->request(
