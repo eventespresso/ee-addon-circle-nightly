@@ -96,6 +96,13 @@ class Config
 
 
     /**
+     * This contains custom travis configuration for a given project on travis phpunit nightlies.
+     * @var array()
+     */
+    private $custom_travis_config_phpunit_tests = array();
+
+
+    /**
      * Array of projects that acceptance tests are run on.
      *  - each project should be for an ee-addon that receives nightly tests.
      *  - the script will automatically trigger a build just for ee core.
@@ -139,7 +146,7 @@ class Config
             throw new InvalidArgumentException(sprintf('Unable to read the given file %s.', $options_file));
         }
 
-        $decoded = json_decode(file_get_contents($options_file, true));
+        $decoded = json_decode(file_get_contents($options_file, true), true);
         if ($decoded === null) {
             throw new LogicException(sprintf('The contents of the file (%s) is not valid json.', $options_file));
         }
@@ -257,5 +264,11 @@ class Config
     public function acceptanceTestsRepository()
     {
         return $this->acceptance_tests_repository;
+    }
+
+
+    public function customTravisConfigPhpunitTests()
+    {
+        return $this->custom_travis_config_phpunit_tests;
     }
 }

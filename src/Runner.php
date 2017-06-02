@@ -91,9 +91,19 @@ class Runner
         $count = 0;
         //nightlies for travis
         if ($this->config->projectsToNotifyTravis()) {
+            $custom_config = $this->config->customTravisConfigPhpunitTests();
             foreach ($this->config->projectsToNotifyTravis() as $travis_project) {
                 $this->triggerNightlyTravis($travis_project, 'master');
-                $this->triggerNightlyTravis($travis_project, $this->latest_release_core);
+                //only trigger nightly on release branch if this isn't a core branch
+                if (! (
+                    isset(
+                        $custom_config[$travis_project],
+                        $custom_config[$travis_project]['is_core']
+                    )
+                    && $custom_config[$travis_project]['is_core']
+                )) {
+                    $this->triggerNightlyTravis($travis_project, $this->latest_release_core);
+                }
                 $count++;
                 if ($count%3 === 0) {
                     $count = 0;
@@ -160,6 +170,23 @@ class Runner
     private function triggerNightlyTravis($project, $branch)
     {
         $build_url = 'https://api.travis-ci.org/repo/' . urlencode($project) . '/requests';
+        $custom_message = 'Nightly Build against EE core ' . $branch;
+        $config = array(
+            'merge_Mode' => 'deep_merge',
+            'env' => array(
+                'global' => array(
+                    "EE_VERSION=$branch"
+                )
+            )
+        );
+        $custom_travis_config = $this->config->customTravisConfigPhpunitTests();
+        if (isset($custom_travis_config[$project])) {
+            $custom_message = isset($custom_travis_config['message'])
+                ? $custom_travis_config['message']
+                : $custom_message;
+            $custom_travis_config = $this->unsetNonTravisKeysFromConfig($custom_travis_config);
+            $config = array_merge($config, $custom_travis_config);
+        }
         $response = $this->http->request(
             'POST',
             $build_url,
@@ -174,15 +201,8 @@ class Runner
                 'json' => array(
                     'request' => array(
                         'branch' => 'master',
-                        'message' => 'Nightly Build against EE core ' . $branch,
-                        'config' => array(
-                            'merge_mode' => 'deep_merge',
-                            'env' => array(
-                                'global' => array(
-                                    "EE_VERSION=$branch"
-                                )
-                            )
-                        )
+                        'message' => $custom_message,
+                        'config' => $config
                     )
                 )
             )
@@ -190,6 +210,15 @@ class Runner
         if (in_array($response->getStatusCode(), $this->getTravisErrorStatusCodes())) {
             $this->logger->warning($response->getBody());
         }
+    }
+
+
+
+    private function unsetNonTravisKeysFromConfig($custom_travis_config)
+    {
+        unset($custom_travis_config['message']);
+        unset($custom_travis_config['is_core']);
+        return $custom_travis_config;
     }
 
 
