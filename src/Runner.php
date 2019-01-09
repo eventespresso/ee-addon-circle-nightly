@@ -115,7 +115,7 @@ class Runner
         //nightly acceptance tests
         if ($this->config->acceptanceTestsRepository()) {
             //first trigger core only acceptance tests
-            $this->triggerNightlyAcceptanceTests('core', 'master');
+            //$this->triggerNightlyAcceptanceTests('core', 'master');
             $count = 0;
             if ($this->config->acceptanceTestsProjects()) {
                 foreach ($this->config->acceptanceTestsProjects() as $acceptance_project) {
@@ -169,7 +169,7 @@ class Runner
      */
     private function triggerNightlyTravis($project, $branch)
     {
-        $build_url = 'https://api.travis-ci.org/repo/' . urlencode($project) . '/requests';
+        $build_url = 'https://api.travis-ci.com/repo/' . urlencode($project) . '/requests';
         $custom_message = 'Nightly Build against EE core ' . $branch;
         $config = array(
             'merge_mode' => 'deep_merge',
