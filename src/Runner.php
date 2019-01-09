@@ -229,7 +229,7 @@ class Runner
      */
     private function triggerNightlyAcceptanceTests($project, $branch)
     {
-        $build_url = 'https://api.travis-ci.org/repo/' . urlencode($this->config->acceptanceTestsRepository()) . '/requests';
+        $build_url = 'https://api.travis-ci.com/repo/' . urlencode($this->config->acceptanceTestsRepository()) . '/requests';
         if ($branch === 'master') {
             $global_environment_variables = array(
                 "EE_BRANCH=$branch",
